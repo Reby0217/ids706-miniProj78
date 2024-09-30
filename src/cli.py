@@ -3,6 +3,7 @@ import sqlite3
 # Connect to the SQL database (create if not exists)
 def connect_db():
     conn = sqlite3.connect("wealth_db.db")
+    print("Database connection.\n")
     return conn
 
 
@@ -105,7 +106,7 @@ def main():
 
     create_table(conn)
     clear_table(conn)  # Clear table before inserting new records
-    
+
     insert_data(conn)
     read_data(conn)  # Check records
 
