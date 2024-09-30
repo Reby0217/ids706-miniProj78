@@ -105,12 +105,18 @@ def main():
 
     create_table(conn)
     clear_table(conn)  # Clear table before inserting new records
+    
     insert_data(conn)
     read_data(conn)  # Check records
+
     retrieve_sorted_by_net_worth(conn)  # Retrieve sorted by net worth
     retrieve_by_industry(conn, "Tech")  # Retrieve only Tech industry
+
     update_data(conn)
+    read_data(conn)  # Check records
+
     delete_data(conn)
+    read_data(conn)  # Check records
     conn.close()
     print("Database connection closed.\n")
 
