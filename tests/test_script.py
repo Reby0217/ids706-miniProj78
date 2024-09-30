@@ -96,14 +96,16 @@ def test_retrieve_by_industry(setup_database, capsys):
         "(3, 'Charlie', 'Canada', 'Tech', 150.0, 'CompanyC')",
     ]
 
-    # Check that both records are present in the output and there are no extra records
+    # Check that both records are present in the output
     assert any(tech_records[0] in line for line in output_lines)
     assert any(tech_records[1] in line for line in output_lines)
 
-    # Verify that there are exactly two lines for "Tech" records (excluding the header line)
+    # Exclude any lines that are not actual records (like summary log lines)
     tech_record_lines = [
-        line for line in output_lines[1:] if "Tech" in line
-    ]  # Skip the first line
+        line for line in output_lines[1:] if "(" in line
+    ]  # Skip the first line (header), and only count actual record lines
+
+    # Verify that there are exactly two lines for "Tech" records
     assert len(tech_record_lines) == 2
 
 

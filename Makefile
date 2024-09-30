@@ -24,5 +24,9 @@ format:
 clean:
 	rm -rf venv
 
+# Run the application with messages
+run:
+	. venv/bin/activate && python src/cli.py
+
 # Run all major tasks: install, setup, lint, test, format
 all: install setup lint test format
