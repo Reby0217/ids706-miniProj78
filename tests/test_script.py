@@ -1,74 +1,119 @@
 import pytest
-from src.cli import main
-import pandas as pd
-from unittest.mock import patch
+from src.cli import (
+    connect_db,
+    create_table,
+    insert_data,
+    retrieve_sorted_by_net_worth,
+    retrieve_by_industry,
+    update_data,
+    delete_data,
+    read_data,
+)
 
 
 @pytest.fixture
-def mock_data():
-    data = {
-        "Name": ["Alice", "Bob", "Charlie"],
-        "Country": ["USA", "UK", "Canada"],
-        "Industry": ["Tech", "Finance", "Tech"],
-        "Net Worth (in billions)": [100, 200, 150],
-        "Company": ["CompanyA", "CompanyB", "CompanyC"],
-    }
-    return pd.DataFrame(data)
+def setup_database():
+    conn = connect_db()
+    create_table(conn)
+
+    # Clear the table to avoid duplicate entries across test runs
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM wealthiest_people")
+    conn.commit()  # Commit after clearing the table
+
+    insert_data(conn)
+    yield conn
+    conn.close()  # Close the connection after the test
 
 
-# Notice the updated patch path to correctly patch `read_data` where it's used in `cli.py`
-@patch("src.cli.read_data")
-@patch("src.cli.get_descriptive_statistics")
-@patch("src.cli.get_industry_avg_net_worth")
-def test_main(mock_get_industry_avg, mock_get_stats, mock_read_data, mock_data, capsys):
-    # Mock the read_data function to return the sample dataframe
-    mock_read_data.return_value = mock_data
+def test_create_table(setup_database):
+    cursor = setup_database.cursor()
+    cursor.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='wealthiest_people';"
+    )
+    result = cursor.fetchone()
+    assert result is not None
 
-    # Mock the get_descriptive_statistics function
-    mock_get_stats.return_value = mock_data.describe()
 
-    # Mock the get_industry_avg_net_worth function
-    mock_get_industry_avg.return_value = mock_data.groupby("Industry")[
-        "Net Worth (in billions)"
-    ].mean()
+def test_insert_data(setup_database):
+    cursor = setup_database.cursor()
+    cursor.execute("SELECT * FROM wealthiest_people")
+    rows = cursor.fetchall()
+    assert len(rows) == 3
 
-    # Run the main function
-    main()
 
-    # Capture the output
+def test_update_data(setup_database):
+    update_data(setup_database)
+    cursor = setup_database.cursor()
+    cursor.execute("SELECT net_worth FROM wealthiest_people WHERE name = 'Charlie'")
+    row = cursor.fetchone()
+    assert row[0] == 180
+
+
+def test_delete_data(setup_database):
+    delete_data(setup_database)
+    cursor = setup_database.cursor()
+    cursor.execute("SELECT * FROM wealthiest_people WHERE name = 'Bob'")
+    row = cursor.fetchone()
+    assert row is None
+
+
+def test_retrieve_sorted_by_net_worth(setup_database, capsys):
+    # Capture the printed output of retrieve_sorted_by_net_worth function
+    retrieve_sorted_by_net_worth(setup_database)
     captured = capsys.readouterr()
 
-    # Check that the output contains the expected data
-    assert "Sample Data" in captured.out
-    assert "Descriptive statistics" in captured.out
-    assert "Average Net Worth by Industry" in captured.out
+    # Split the output lines
+    output_lines = captured.out.splitlines()
 
-    # Ensure specific values from the mock data are printed
-    assert "Alice" in captured.out
-    assert "Tech" in captured.out
-    assert "Finance" in captured.out
-    assert "150.0" in captured.out  # Verify specific value
+    # Verify the order of the output should be sorted by net worth in descending order
+    assert "Wealthiest People Records sorted by net worth:" in output_lines[0]
+    assert (
+        "(2, 'Bob', 'UK', 'Finance', 200.0, 'CompanyB')" in output_lines[1]
+    )  # Bob first
+    assert (
+        "(3, 'Charlie', 'Canada', 'Tech', 150.0, 'CompanyC')" in output_lines[2]
+    )  # Charlie second
+    assert (
+        "(1, 'Alice', 'USA', 'Tech', 100.0, 'CompanyA')" in output_lines[3]
+    )  # Alice third
 
-    # Ensure functions were called the correct number of times
-    mock_read_data.assert_called_once()
-    mock_get_stats.assert_called_once()
-    mock_get_industry_avg.assert_called_once()
 
-
-# Test when the dataset file is missing
-@patch("src.cli.read_data", side_effect=FileNotFoundError)
-def test_main_file_not_found(mock_read_data, capsys):
-    # Run the main function and capture the return value
-    result = main()
-
-    # Capture the output
+def test_retrieve_by_industry(setup_database, capsys):
+    # Capture the printed output of retrieve_by_industry function
+    retrieve_by_industry(setup_database, "Tech")
     captured = capsys.readouterr()
 
-    # Check that the error message is printed
-    assert "Error: File not found" in captured.out
+    # Split the output lines
+    output_lines = captured.out.splitlines()
 
-    # Ensure that read_data was called once and raised the FileNotFoundError
-    mock_read_data.assert_called_once()
+    # Verify the first line contains the correct header
+    assert "Wealthiest People Records in Tech industry:" in output_lines[0]
 
-    # Check that the function returns None (implicit return on early exit)
-    assert result is None  # This checks if the return statement is hit
+    # Verify the correct people are listed, in any order (Alice and Charlie)
+    tech_records = [
+        "(1, 'Alice', 'USA', 'Tech', 100.0, 'CompanyA')",
+        "(3, 'Charlie', 'Canada', 'Tech', 150.0, 'CompanyC')",
+    ]
+
+    # Check that both records are present in the output and there are no extra records
+    assert any(tech_records[0] in line for line in output_lines)
+    assert any(tech_records[1] in line for line in output_lines)
+
+    # Verify that there are exactly two lines for "Tech" records (excluding the header line)
+    tech_record_lines = [
+        line for line in output_lines[1:] if "Tech" in line
+    ]  # Skip the first line
+    assert len(tech_record_lines) == 2
+
+
+def test_read_data(setup_database, capsys):
+    # Capture the printed output of read_data function
+    read_data(setup_database)
+    captured = capsys.readouterr()
+
+    # Verify expected output is in the captured output
+    assert "Wealthiest People Records:" in captured.out
+    assert "(1, 'Alice', 'USA', 'Tech', 100.0, 'CompanyA')" in captured.out
+    assert "(2, 'Bob', 'UK', 'Finance', 200.0, 'CompanyB')" in captured.out
+    assert "(3, 'Charlie', 'Canada', 'Tech', 150.0, 'CompanyC')" in captured.out
