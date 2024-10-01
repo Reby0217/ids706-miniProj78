@@ -133,9 +133,9 @@ conn = sqlite3.connect("wealth_db.db")
    ```
 2. **Read**:
    - **All Records**:
-    ```sql
+     ```sql
      SELECT * FROM wealthiest_people
-    ```
+     ```
    - **Sort by Net Worth**:
      ```sql
      SELECT * FROM wealthiest_people ORDER BY net_worth DESC
