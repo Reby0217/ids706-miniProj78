@@ -34,27 +34,37 @@ This project focuses on interacting with a SQL database using Python. It perform
 
 The project uses a `Makefile` to streamline development tasks, including testing, formatting, linting, and installing dependencies. Key Makefile commands:
 
-- **Test**: Runs tests for the notebook, script, and library.
+- **Install**: Upgrade `pip` and install project dependencies.
   ```bash
-  make test
+  make install
   ```
   
-- **Format**: Formats all Python files using `black`.
+- **Setup**: Create and activate a virtual environment, ensuring the latest version of `pip` is installed.
+  ```bash
+  make setup
+  ```
+
+- **Format**: Automatically format all Python files with `black`.
   ```bash
   make format
   ```
 
-- **Lint**: Checks the code quality using `Ruff`.
+- **Lint**: Check code quality using `ruff`.
   ```bash
   make lint
   ```
 
-- **Install**: Installs all required dependencies from `requirements.txt`.
+- **Test**: Run the unit tests for the project.
   ```bash
-  make install
+  make test
   ```
 
-- **All**: Runs all major tasks (`install`, `setup`, `lint`, `test`, and `format`) in one command.
+- **Run**: Execute the main Python script to interact with the database.
+  ```bash
+  make run
+  ```
+
+- **All**: Run the full suite of tasks—install, setup, lint, test, and format.
   ```bash
   make all
   ```
