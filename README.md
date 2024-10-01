@@ -7,32 +7,28 @@
 [![Tests](https://github.com/Reby0217/ids706-miniProj5/actions/workflows/test.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj5/actions/workflows/test.yml)
 
 
-This project demonstrates the implementation of Continuous Integration (CI) using GitHub Actions for a Python-based Data Science project. It focuses on automating testing, code formatting, linting, and dependency management. The project performs descriptive statistics analysis using a dataset of the 1000 wealthiest people globally.
+This project focuses on interacting with a SQL database using Python. It performs CRUD operations on a database containing information about the wealthiest people.
 
 ---
+## Deliverables
+- **Python script**: The main script `cli.py` handles database interactions.
+- **Screenshot of successful database operations**: 
+![Log](screenshots/log.png)
 
 
 
 ## Project Structure
-
-- **Jupyter Notebook** (`src/individual_proj_1.ipynb`):
-  - Performs descriptive statistical analysis using Pandas.
-  - Tested using the `nbval` plugin for `pytest`.
-  
-- **Python Script** (`src/cli.py`):
-  - Reads the dataset, computes descriptive statistics, and groups the data by industry.
-  
-- **Shared Library** (`src/lib.py`):
-  - Contains reusable functions for data validation, reading data, calculating descriptive statistics, plotting, and calculating skewness/kurtosis.
-
-- **Test Scripts**:
-  - `tests/test_lib.py`: Contains unit tests for the shared library functions.
-  - `tests/test_script.py`: Contains tests for the CLI functions.
-  
-- **Dataset** (`src/Top_1000_wealthiest_people.csv`):
-  - A CSV file containing data about the 1000 wealthiest people, including their name, country, industry, net worth (in billions), and company.
-  - **Dataset source**: [Top 1000 Wealthiest People in the World - Kaggle](https://www.kaggle.com/datasets/muhammadehsan02/top-1000-wealthiest-people-in-the-world)
-
+```bash
+.
+├── src
+│   ├── cli.py                         # Script for interacting with the SQL database
+├── tests
+│   ├── test_script.py                 # Unit tests for CRUD operations
+├── requirements.txt                   # Project dependencies
+├── Makefile                           # Commands for install, setup, test, run, lint, and format
+├── wealth_db.db                       # SQLite database
+└── .github/workflows                  # CI/CD workflows for GitHub Actions
+```
 
 ## Makefile
 
@@ -79,55 +75,81 @@ The project uses a `Makefile` to streamline development tasks, including testing
    cd ids706-indvidual1
    ```
 
-2. Create and activate a virtual environment:
-
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate 
-   ```
-
-3. Install dependencies:
+2. Install dependencies:
 
    ```bash
    make install
    ```
+3. Create and activate a virtual environment:
+   ```bash
+   make setup
+   ```
 
-### Running Tests
+4. Run the Python script:
+   ```bash
+   make run
+   ```
 
-To run all tests (for both the notebook and the scripts):
+5. Run tests:
+   ```bash
+   make test
+   ```
 
-```bash
-make test
+6. Format and lint the code:
+   ```bash
+   make format
+   make lint
+   ```
+
+## Requirements
+
+### Database Connection
+The project establishes a persistent connection to an SQLite database (`wealth_db.db`) using the `sqlite3` module. The connection allows for all standard SQL operations:
+```python
+conn = sqlite3.connect("wealth_db.db")
 ```
+- **Automatic table creation**: The table `wealthiest_people` is created if it does not already exist.
 
-### Linting and Formatting
+### CRUD Operations
 
-To format the code using `black`, run:
+- **Create**: New records for the wealthiest individuals are inserted into the database.
+- **Read**: Data is retrieved from the database in multiple ways: all records, sorted by  `net_worth` or filtered by `industry`.
+- **Update**: The net worth of specific individuals can be updated.
+- **Delete**: Specific records can be deleted from the database.
 
-```bash
-make format
-```
+1. **Create**:
+   ```python
+   cursor.executemany("INSERT INTO wealthiest_people (id, name, country, industry, net_worth, company) VALUES (?, ?, ?, ?, ?, ?)", people)
+   ```
+2. **Read**:
+   - **All Records**:
+   ```sql
+   SELECT * FROM wealthiest_people
+   ```
+   - **Sort by Net Worth**:
+     ```sql
+     SELECT * FROM wealthiest_people ORDER BY net_worth DESC
+     ```
+   - **Filter by Industry**:
+     ```sql
+     SELECT * FROM wealthiest_people WHERE industry = ?
+     ```
+3. **Update**:
+   ```python
+   cursor.execute("UPDATE wealthiest_people SET net_worth = 180 WHERE name = 'Charlie'")
+   ```
+4. **Delete**:
+   ```python
+   cursor.execute("DELETE FROM wealthiest_people WHERE name = 'Bob'")
+   ```
 
-To lint the code using `Ruff`, run:
 
-```bash
-make lint
-```
-
-## Data Sample
-![Data](screenshots/head.png)
-
-## Descriptive Statistics
-![Descriptive Stats](screenshots/descriptive_stat.png)
-
-### Skewness and Kurtosis of Net Worth Distribution
-![Skewness and kurtosis](screenshots/Skewness_and_kurtosis.png)
-
-### Average Net Worth by Industry
-![Avg by Industry](screenshots/industry_avg_net_worth.png)
-
-## Bar Plot: Average Net Worth by Industry
-![Bar Plot](screenshots/barplot.png)
-
-## Box Plot: Net Worth Distribution by Industry
-![Box Plot](screenshots/boxplot.png)
+### 2 different SQL Queries
+- **Sort by Net Worth**: The script retrieves the wealthiest people sorted by their net worth using the query:
+  ```sql
+  SELECT * FROM wealthiest_people ORDER BY net_worth DESC
+  ```
+- **Filter by Industry**: The script filters records based on the industry, e.g., retrieving all records from the "Tech" industry:
+  ```sql
+  SELECT * FROM wealthiest_people WHERE industry = ?
+  ```
