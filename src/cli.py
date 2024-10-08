@@ -23,43 +23,46 @@ cursor = connection.cursor()
 
 
 def init():
-    
-    """Initialize the project."""
-    # Create the customers table
+    """Initialize the project by creating or clearing tables."""
+    # Clear or create the customers table
+    cursor.execute("DROP TABLE IF EXISTS orders")
+    cursor.execute("DROP TABLE IF EXISTS products")
+    cursor.execute("DROP TABLE IF EXISTS customers")
+
     cursor.execute(
         """
-    CREATE TABLE IF NOT EXISTS customers (
-        customer_id INT AUTO_INCREMENT PRIMARY KEY,
-        customer_name VARCHAR(255) NOT NULL,
-        customer_email VARCHAR(255) NOT NULL UNIQUE
-    )
-    """
+        CREATE TABLE IF NOT EXISTS customers (
+            customer_id INT AUTO_INCREMENT PRIMARY KEY,
+            customer_name VARCHAR(255) NOT NULL,
+            customer_email VARCHAR(255) NOT NULL UNIQUE
+        )
+        """
     )
 
-    # Create the products table
+    # Clear or create the products table
     cursor.execute(
         """
-    CREATE TABLE IF NOT EXISTS products (
-        product_id INT AUTO_INCREMENT PRIMARY KEY,
-        product_name VARCHAR(255) NOT NULL,
-        price DECIMAL(10, 2) NOT NULL
-    )
-    """
+        CREATE TABLE IF NOT EXISTS products (
+            product_id INT AUTO_INCREMENT PRIMARY KEY,
+            product_name VARCHAR(255) NOT NULL,
+            price DECIMAL(10, 2) NOT NULL
+        )
+        """
     )
 
-    # Create the orders table
+    # Clear or create the orders table
     cursor.execute(
         """
-    CREATE TABLE IF NOT EXISTS orders (
-        order_id INT AUTO_INCREMENT PRIMARY KEY,
-        customer_id INT,
-        product_id INT,
-        quantity INT NOT NULL,
-        order_date DATE,
-        FOREIGN KEY (customer_id) REFERENCES customers(customer_id),
-        FOREIGN KEY (product_id) REFERENCES products(product_id)
-    )
-    """
+        CREATE TABLE IF NOT EXISTS orders (
+            order_id INT AUTO_INCREMENT PRIMARY KEY,
+            customer_id INT,
+            product_id INT,
+            quantity INT NOT NULL,
+            order_date DATE,
+            FOREIGN KEY (customer_id) REFERENCES customers(customer_id),
+            FOREIGN KEY (product_id) REFERENCES products(product_id)
+        )
+        """
     )
 
     # Insert sample data into customers table
@@ -94,7 +97,7 @@ def init():
 
     # Commit the changes
     connection.commit()
-    print("Tables created and sample data inserted successfully.")
+    print("Tables created/cleared and sample data inserted successfully.")
 
 
 def complex_query():

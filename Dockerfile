@@ -29,5 +29,8 @@ RUN chown -R ${USER}:${USER} /app
 # Switch to the non-root user (optional but recommended)
 USER ${USER}
 
+# Set PYTHONPATH to include /app
+ENV PYTHONPATH=/app
+
 # Specify the command to run your application
 CMD ["python", "-m", "src.cli"]

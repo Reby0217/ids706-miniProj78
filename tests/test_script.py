@@ -3,29 +3,31 @@ import mysql.connector
 from src.cli import init, complex_query
 
 
-@pytest.fixture
-def setup_database():
-    # Connect to the MySQL database
+@pytest.fixture(scope="session")
+def db_connection():
+    """Create and return a database connection that is shared across the test session."""
     conn = mysql.connector.connect(
         host="localhost", user="root", password="qwer1234", database="ecommerce_db"
     )
 
-    # Create the tables and insert the initial data
-    init()
-
+    # Ensure the tables are created only once for all tests
+    init()  # Assuming `init` creates and populates tables
     yield conn
-
-    # Clean up the database after each test
-    cursor = conn.cursor()
-    cursor.execute("DROP TABLE IF EXISTS orders")
-    cursor.execute("DROP TABLE IF EXISTS products")
-    cursor.execute("DROP TABLE IF EXISTS customers")
-    conn.commit()
     conn.close()
 
 
-def test_create_tables(setup_database):
-    cursor = setup_database.cursor()
+@pytest.fixture(autouse=True)
+def setup_transaction(db_connection):
+    """Automatically start a transaction and rollback after each test to avoid re-creating tables."""
+    cursor = db_connection.cursor()
+    cursor.execute("START TRANSACTION;")
+    yield
+    db_connection.rollback()
+
+
+def test_create_tables(db_connection):
+    cursor = db_connection.cursor()
+
     # Check if the `customers` table exists
     cursor.execute("SHOW TABLES LIKE 'customers'")
     result = cursor.fetchone()
@@ -42,8 +44,8 @@ def test_create_tables(setup_database):
     assert result is not None
 
 
-def test_insert_data(setup_database):
-    cursor = setup_database.cursor()
+def test_insert_data(db_connection):
+    cursor = db_connection.cursor()
     cursor.execute("SELECT * FROM customers")
     customers = cursor.fetchall()
     assert len(customers) == 2  # John Doe and Jane Smith
@@ -57,7 +59,7 @@ def test_insert_data(setup_database):
     assert len(orders) == 3  # Orders from the sample data
 
 
-def test_complex_query(setup_database, capsys):
+def test_complex_query(db_connection, capsys):
     # Capture the output of the complex query function
     complex_query()
     captured = capsys.readouterr()

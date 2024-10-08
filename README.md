@@ -1,10 +1,11 @@
 # IDS706 Python Script interacting with SQL Database
 
 ## Continuous Integration with GitHub Actions
-[![Install](https://github.com/Reby0217/ids706-miniProj5/actions/workflows/install.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj5/actions/workflows/install.yml)
-[![Lint](https://github.com/Reby0217/ids706-miniProj5/actions/workflows/lint.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj5/actions/workflows/lint.yml)
-[![Format](https://github.com/Reby0217/ids706-miniProj5/actions/workflows/format.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj5/actions/workflows/format.yml)
-[![Tests](https://github.com/Reby0217/ids706-miniProj5/actions/workflows/test.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj5/actions/workflows/test.yml)
+[![Install](https://github.com/Reby0217/ids706-miniProj6/actions/workflows/install.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj6/actions/workflows/install.yml)
+[![Lint](https://github.com/Reby0217/ids706-miniProj6/actions/workflows/lint.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj6/actions/workflows/lint.yml)
+[![Format](https://github.com/Reby0217/ids706-miniProj6/actions/workflows/format.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj6/actions/workflows/format.yml)
+[![Tests](https://github.com/Reby0217/ids706-miniProj6/actions/workflows/test.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj6/actions/workflows/test.yml)
+
 
 
 This project focuses on interacting with a SQL database using Python. It performs CRUD operations on a database containing information about the wealthiest people.
