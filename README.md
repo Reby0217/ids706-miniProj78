@@ -189,6 +189,12 @@ To run the project in a Docker container, follow these steps:
    make docker-test
    ```
 
+### Screenshots
+![Docker](screenshots/dockerBuild.png)
+
+![dockerRun.png](screenshots/dockerRun.png)
+
+![test](screenshots/test.png)
 ---
 
 ## Accessing MySQL in Docker
@@ -208,13 +214,7 @@ DESCRIBE products; SELECT * FROM products;
 DESCRIBE orders; SELECT * FROM orders;
 ```
 
----
 ### Screenshots
-![Docker](screenshots/dockerBuild.png)
-
-![dockerRun.png](screenshots/dockerRun.png)
-
-![test](screenshots/test.png)
 
 ![Table](screenshots/table1.png)
 
