@@ -204,7 +204,7 @@ Once you're inside the MySQL client, you can run queries to view the tables:
 ```sql
 USE ecommerce_db;
 DESCRIBE customers; SELECT * FROM customers;
-DESCRIBE customers; SELECT * FROM customers;
+DESCRIBE products; SELECT * FROM products;
 DESCRIBE orders; SELECT * FROM orders;
 ```
 
