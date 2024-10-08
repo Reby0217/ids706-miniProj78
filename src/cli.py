@@ -1,125 +1,142 @@
-import sqlite3
+import mysql.connector
 
-# Connect to the SQL database (create if not exists)
-def connect_db():
-    conn = sqlite3.connect("wealth_db.db")
-    print("Database connected.\n")
-    return conn
+# Create a connection to the MySQL server
+connection = mysql.connector.connect(host="localhost", user="root", password="qwer1234")
+
+# Create a cursor to execute SQL queries
+cursor = connection.cursor()
+
+# Create a new database if it doesn't already exist
+cursor.execute("CREATE DATABASE IF NOT EXISTS ecommerce_db")
+
+# Close the cursor and the initial connection
+cursor.close()
+connection.close()
+
+# Create a connection to the MySQL database
+connection = mysql.connector.connect(
+    host="localhost", user="root", password="qwer1234", database="ecommerce_db"
+)
+
+# Create a cursor to execute SQL queries
+cursor = connection.cursor()
 
 
-# Create the table
-def create_table(conn):
-    cursor = conn.cursor()
+def init():
+    
+    """Initialize the project."""
+    # Create the customers table
     cursor.execute(
         """
-        CREATE TABLE IF NOT EXISTS wealthiest_people (
-            id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
-            country TEXT NOT NULL,
-            industry TEXT NOT NULL,
-            net_worth REAL NOT NULL,
-            company TEXT NOT NULL
-        )
+    CREATE TABLE IF NOT EXISTS customers (
+        customer_id INT AUTO_INCREMENT PRIMARY KEY,
+        customer_name VARCHAR(255) NOT NULL,
+        customer_email VARCHAR(255) NOT NULL UNIQUE
+    )
     """
     )
-    conn.commit()
-    print("Table 'wealthiest_people' created successfully.\n")
 
-
-# Clear all records in the table
-def clear_table(conn):
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM wealthiest_people")
-    conn.commit()
-    print("Table 'wealthiest_people' cleared.\n")
-
-
-# Insert records with manual IDs
-def insert_data(conn):
-    people = [
-        (1, "Alice", "USA", "Tech", 100, "CompanyA"),
-        (2, "Bob", "UK", "Finance", 200, "CompanyB"),
-        (3, "Charlie", "Canada", "Tech", 150, "CompanyC"),
-    ]
-    cursor = conn.cursor()
-    cursor.executemany(
-        "INSERT INTO wealthiest_people (id, name, country, industry, net_worth, company) VALUES (?, ?, ?, ?, ?, ?)",
-        people,
-    )
-    conn.commit()
-    print(f"{len(people)} records inserted successfully.\n")
-
-
-# Retrieve all records, sorted by net worth
-def retrieve_sorted_by_net_worth(conn):
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM wealthiest_people ORDER BY net_worth DESC")
-    rows = cursor.fetchall()
-    print("Wealthiest People Records sorted by net worth:")
-    for row in rows:
-        print(row)
-    print(f"Retrieved {len(rows)} records sorted by net worth.\n")
-
-
-# Retrieve records filtered by industry (e.g., "Tech")
-def retrieve_by_industry(conn, industry):
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM wealthiest_people WHERE industry = ?", (industry,))
-    rows = cursor.fetchall()
-    print(f"Wealthiest People Records in {industry} industry:")
-    for row in rows:
-        print(row)
-    print(f"Retrieved {len(rows)} records for industry: {industry}\n")
-
-
-# Update a record
-def update_data(conn):
-    cursor = conn.cursor()
+    # Create the products table
     cursor.execute(
-        "UPDATE wealthiest_people SET net_worth = 180 WHERE name = 'Charlie'"
+        """
+    CREATE TABLE IF NOT EXISTS products (
+        product_id INT AUTO_INCREMENT PRIMARY KEY,
+        product_name VARCHAR(255) NOT NULL,
+        price DECIMAL(10, 2) NOT NULL
     )
-    conn.commit()
-    print("Updated Charlie's net worth to 180.\n")
+    """
+    )
+
+    # Create the orders table
+    cursor.execute(
+        """
+    CREATE TABLE IF NOT EXISTS orders (
+        order_id INT AUTO_INCREMENT PRIMARY KEY,
+        customer_id INT,
+        product_id INT,
+        quantity INT NOT NULL,
+        order_date DATE,
+        FOREIGN KEY (customer_id) REFERENCES customers(customer_id),
+        FOREIGN KEY (product_id) REFERENCES products(product_id)
+    )
+    """
+    )
+
+    # Insert sample data into customers table
+    cursor.execute(
+        "INSERT INTO customers (customer_name, customer_email) VALUES ('John Doe', 'john@example.com')"
+    )
+    cursor.execute(
+        "INSERT INTO customers (customer_name, customer_email) VALUES ('Jane Smith', 'jane@example.com')"
+    )
+
+    # Insert sample data into products table
+    cursor.execute(
+        "INSERT INTO products (product_name, price) VALUES ('Laptop', 999.99)"
+    )
+    cursor.execute(
+        "INSERT INTO products (product_name, price) VALUES ('Headphones', 199.99)"
+    )
+    cursor.execute(
+        "INSERT INTO products (product_name, price) VALUES ('Keyboard', 49.99)"
+    )
+
+    # Insert sample data into orders table
+    cursor.execute(
+        "INSERT INTO orders (customer_id, product_id, quantity, order_date) VALUES (1, 1, 1, '2023-09-15')"
+    )
+    cursor.execute(
+        "INSERT INTO orders (customer_id, product_id, quantity, order_date) VALUES (1, 2, 2, '2023-09-16')"
+    )
+    cursor.execute(
+        "INSERT INTO orders (customer_id, product_id, quantity, order_date) VALUES (2, 3, 1, '2023-09-17')"
+    )
+
+    # Commit the changes
+    connection.commit()
+    print("Tables created and sample data inserted successfully.")
 
 
-# Delete a record
-def delete_data(conn):
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM wealthiest_people WHERE name = 'Bob'")
-    conn.commit()
-    print("Deleted Bob's record.\n")
+def complex_query():
+    """A complex query to fetch customer details and their order history with aggregation."""
+    sql_query = """
+    SELECT
+        customers.customer_name,
+        customers.customer_email,
+        COUNT(orders.order_id) AS total_orders,
+        COALESCE(SUM(orders.quantity * products.price), 0) AS total_spent,
+        MAX(orders.order_date) AS last_order_date
+    FROM
+        customers
+    LEFT JOIN
+        orders ON customers.customer_id = orders.customer_id
+    LEFT JOIN
+        products ON orders.product_id = products.product_id
+    GROUP BY
+        customers.customer_id
+    ORDER BY
+        total_spent DESC;
+    """
 
+    # Execute the SQL query
+    cursor.execute(sql_query)
 
-# Read all records
-def read_data(conn):
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM wealthiest_people")
-    rows = cursor.fetchall()
-    print("Wealthiest People Records:")
-    for row in rows:
-        print(row)
-    print(f"Retrieved {len(rows)} records.\n")
+    # Fetch all the results
+    results = cursor.fetchall()
+
+    # Process and print the results
+    for row in results:
+        customer_name, customer_email, total_orders, total_spent, last_order_date = row
+        print(f"Customer: {customer_name} ({customer_email})")
+        print(f"Total Orders: {total_orders}")
+        print(f"Total Spent: ${total_spent:.2f}")
+        print(f"Last Order Date: {last_order_date}")
+        print()
 
 
 def main():
-    conn = connect_db()
-
-    create_table(conn)
-    clear_table(conn)  # Clear table before inserting new records
-
-    insert_data(conn)
-    read_data(conn)  # Check records
-
-    retrieve_sorted_by_net_worth(conn)  # Retrieve sorted by net worth
-    retrieve_by_industry(conn, "Tech")  # Retrieve only Tech industry
-
-    update_data(conn)
-    read_data(conn)  # Check records
-
-    delete_data(conn)
-    read_data(conn)  # Check records
-    conn.close()
-    print("Database connection closed.\n")
+    init()
+    complex_query()
 
 
 if __name__ == "__main__":

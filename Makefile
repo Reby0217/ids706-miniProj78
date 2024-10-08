@@ -10,7 +10,7 @@ setup:
 
 # Run tests within the virtual environment
 test:
-	. venv/bin/activate && PYTHONPATH=. pytest tests/ -q
+	. venv/bin/activate && PYTHONPATH=. pytest tests/ 
 
 # Lint the source code and tests
 lint:
