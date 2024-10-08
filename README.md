@@ -1,4 +1,4 @@
-# IDS706 Python Script interacting with SQL Database
+# IDS706 Complex SQL Query for a MySQL Database
 
 ## Continuous Integration with GitHub Actions
 [![Install](https://github.com/Reby0217/ids706-miniProj6/actions/workflows/install.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj6/actions/workflows/install.yml)
@@ -8,28 +8,73 @@
 
 
 
-This project focuses on interacting with a SQL database using Python. It performs CRUD operations on a database containing information about the wealthiest people.
+This project focuses on designing, querying, and interacting with a MySQL database using Python. The database contains tables representing customers, products, and orders. The SQL queries include complex operations like joins, aggregations, and sorting, providing insights into customer purchases and order histories.
 
 ---
 ## Deliverables
-- **Python script**: The main script `cli.py` handles database interactions.
-- **Screenshot of successful database operations**: 
-![Log](screenshots/log.png)
 
-
-
-## Project Structure
-```bash
-.
-├── src
-│   ├── cli.py                         # Script for interacting with the SQL database
-├── tests
-│   ├── test_script.py                 # Unit tests for CRUD operations
-├── requirements.txt                   # Project dependencies
-├── Makefile                           # Commands for install, setup, test, run, lint, and format
-├── wealth_db.db                       # SQLite database
-└── .github/workflows                  # CI/CD workflows for GitHub Actions
+### SQL Query:
+```sql
+SELECT
+    customers.customer_name,
+    customers.customer_email,
+    COUNT(orders.order_id) AS total_orders,
+    COALESCE(SUM(orders.quantity * products.price), 0) AS total_spent,
+    MAX(orders.order_date) AS last_order_date
+FROM
+    customers
+LEFT JOIN
+    orders ON customers.customer_id = orders.customer_id
+LEFT JOIN
+    products ON orders.product_id = products.product_id
+GROUP BY
+    customers.customer_id
+ORDER BY
+    total_spent DESC;
 ```
+
+### Query Explanation:
+
+The SQL query in `src/cli.py` retrieves aggregated customer details by joining the **customers**, **orders**, and **products** tables, providing information on:
+- Total number of orders each customer has placed.
+- The total amount each customer has spent.
+- The last date when each customer placed an order.
+
+1. **Joins**:
+   - **LEFT JOIN**: Connects the `customers` table with the `orders` table on the `customer_id`. A left join ensures that every customer is included, even if they haven't placed any orders.
+   - The second join connects the `orders` table with the `products` table, allowing access to product prices to calculate the total amount spent by each customer.
+
+2. **Aggregation**:
+   - **COUNT(orders.order_id)**: Counts the number of orders each customer has placed.
+   - **SUM(orders.quantity * products.price)**: Multiplies the quantity of each ordered product by its price to calculate the total amount spent by the customer.
+   - **MAX(orders.order_date)**: Retrieves the latest date on which the customer placed an order.
+
+3. **Handling NULL values**:
+   - **COALESCE(SUM(...), 0)**: Ensures that if a customer has not placed any orders, the result will show `$0` spent instead of `NULL`.
+
+4. **Sorting**:
+   - **ORDER BY total_spent DESC**: Sorts the customers in descending order based on how much they have spent, with the highest spender first.
+
+### Expected Results:
+
+The expected result is a list of customers showing their total number of orders, total amount spent, and the last order date. The data is sorted by the total amount spent, with the highest spender listed first:
+
+```
+Customer: John Doe (john@example.com)
+Total Orders: 2
+Total Spent: $1399.97
+Last Order Date: 2023-09-16
+
+Customer: Jane Smith (jane@example.com)
+Total Orders: 1
+Total Spent: $49.99
+Last Order Date: 2023-09-17
+```
+
+- **John Doe** has placed 2 orders and spent $1399.97, with the last order on `2023-09-16`.
+- **Jane Smith** has placed 1 order and spent $49.99, with the last order on `2023-09-17`.
+
+
 
 ## Makefile
 
@@ -82,8 +127,8 @@ The project uses a `Makefile` to streamline development tasks, including testing
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/Reby0217/ids706-indvidual1.git
-   cd ids706-indvidual1
+   git clone https://github.com/Reby0217/ids706-miniProj6.git
+   cd ids706-miniProj6
    ```
 
 2. Install dependencies:
@@ -112,55 +157,67 @@ The project uses a `Makefile` to streamline development tasks, including testing
    make lint
    ```
 
-## Requirements
+---
 
-### Database Connection
-The project establishes a persistent connection to an SQLite database (`wealth_db.db`) using the `sqlite3` module. The connection allows for all standard SQL operations:
-```python
-conn = sqlite3.connect("wealth_db.db")
+## Running MySQL in Docker
+
+To run the MySQL database in a Docker container, follow these steps:
+
+1. **Run MySQL in Docker**:
+   ```bash
+   docker run --name mysql-db -e MYSQL_ROOT_PASSWORD=qwer1234 -e MYSQL_DATABASE=ecommerce_db -p 3306:3306 -d mysql:8.0
+   ```
+
+---
+
+## Running the Project in Docker
+
+To run the project in a Docker container, follow these steps:
+
+1. **Build the Docker Image**:
+   ```bash
+   make docker-build
+   ```
+
+2. **Run the Docker Container**:
+   ```bash
+   make docker-run
+   ```
+
+3. **Run Tests in Docker**:
+   ```bash
+   make docker-test
+   ```
+
+---
+
+## Accessing MySQL in Docker
+
+To access the MySQL client inside your running MySQL container:
+
+```bash
+docker exec -it mysql-db mysql -u root -p
 ```
-- **Automatic table creation**: The table `wealthiest_people` is created if it does not already exist.
 
-### CRUD Operations
+Once you're inside the MySQL client, you can run queries to view the tables:
 
-- **Create**: New records for the wealthiest individuals are inserted into the database.
-- **Read**: Data is retrieved from the database in multiple ways: all records, sorted by  `net_worth` or filtered by `industry`.
-- **Update**: The net worth of specific individuals can be updated.
-- **Delete**: Specific records can be deleted from the database.
+```sql
+USE ecommerce_db;
+DESCRIBE customers; SELECT * FROM customers;
+DESCRIBE customers; SELECT * FROM customers;
+DESCRIBE orders; SELECT * FROM orders;
+```
 
-1. **Create**:
-   ```python
-   cursor.executemany("INSERT INTO wealthiest_people (id, name, country, industry, net_worth, company) VALUES (?, ?, ?, ?, ?, ?)", people)
-   ```
-2. **Read**:
-   - **All Records**:
-     ```sql
-     SELECT * FROM wealthiest_people
-     ```
-   - **Sort by Net Worth**:
-     ```sql
-     SELECT * FROM wealthiest_people ORDER BY net_worth DESC
-     ```
-   - **Filter by Industry**:
-     ```sql
-     SELECT * FROM wealthiest_people WHERE industry = ?
-     ```
-3. **Update**:
-   ```python
-   cursor.execute("UPDATE wealthiest_people SET net_worth = 180 WHERE name = 'Charlie'")
-   ```
-4. **Delete**:
-   ```python
-   cursor.execute("DELETE FROM wealthiest_people WHERE name = 'Bob'")
-   ```
+---
+### Screenshots
+![Docker](screenshots/dockerBuild.png.png)
 
+![dockerRun.png](screenshots/dockerRun.png)
 
-### 2 different SQL Queries
-- **Sort by Net Worth**: The script retrieves the wealthiest people sorted by their net worth using the query:
-  ```sql
-  SELECT * FROM wealthiest_people ORDER BY net_worth DESC
-  ```
-- **Filter by Industry**: The script filters records based on the industry, e.g., retrieving all records from the "Tech" industry:
-  ```sql
-  SELECT * FROM wealthiest_people WHERE industry = ?
-  ```
+![test](screenshots/test.png)
+
+![Table](screenshots/table1.png)
+
+![Table](screenshots/table2.png)
+
+![Table](screenshots/table3.png)
