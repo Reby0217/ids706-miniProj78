@@ -210,7 +210,7 @@ DESCRIBE orders; SELECT * FROM orders;
 
 ---
 ### Screenshots
-![Docker](screenshots/dockerBuild.png.png)
+![Docker](screenshots/dockerBuild.png)
 
 ![dockerRun.png](screenshots/dockerRun.png)
 
