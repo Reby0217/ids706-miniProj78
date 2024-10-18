@@ -88,7 +88,7 @@ This tool not only counts the words in a file but also stores the result in an S
 
    - **Screenshot of the database table**:
    
-   ![DB](screenshots/db.png)
+      ![DB](screenshots/db.png)
 
 ---
 
