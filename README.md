@@ -1,10 +1,11 @@
-# IDS706 Complex SQL Query for a MySQL Database
+# IDS706 Package a Python Script into a Command-Line Tool (or Rust)
 
 ## Continuous Integration with GitHub Actions
-[![Install](https://github.com/Reby0217/ids706-miniProj6/actions/workflows/install.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj6/actions/workflows/install.yml)
-[![Lint](https://github.com/Reby0217/ids706-miniProj6/actions/workflows/lint.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj6/actions/workflows/lint.yml)
-[![Format](https://github.com/Reby0217/ids706-miniProj6/actions/workflows/format.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj6/actions/workflows/format.yml)
-[![Tests](https://github.com/Reby0217/ids706-miniProj6/actions/workflows/test.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj6/actions/workflows/test.yml)
+[![Install](https://github.com/Reby0217/ids706-miniProj7/actions/workflows/install.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj7/actions/workflows/install.yml)
+[![Lint](https://github.com/Reby0217/ids706-miniProj7/actions/workflows/lint.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj7/actions/workflows/lint.yml)
+[![Format](https://github.com/Reby0217/ids706-miniProj7/actions/workflows/format.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj7/actions/workflows/format.yml)
+[![Tests](https://github.com/Reby0217/ids706-miniProj7/actions/workflows/test.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj7/actions/workflows/test.yml)
+
 
 
 
