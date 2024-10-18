@@ -34,7 +34,7 @@ install-package:
 
 # Clean up the package files
 clean-package:
-	python setup.py clean --all
+	. venv/bin/activate && python setup.py clean --all
 
 # Run all major tasks: install, setup, lint, test, format
 all: install setup lint test format
