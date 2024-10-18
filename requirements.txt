@@ -10,8 +10,6 @@ nbval
 ruff
 
 # datascience
-black[jupyter]==22.3.0
-jupyter==1.0.0
 pandas==2.0.3
 numpy==1.25.0
 matplotlib-inline==0.1.6

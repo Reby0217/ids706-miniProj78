@@ -28,24 +28,13 @@ clean:
 run:
 	. venv/bin/activate && python src/cli.py
 
+# Install the package using setup.py
+install-package:
+	pip install .
+
+# Clean up the package files
+clean-package:
+	python setup.py clean --all
+
 # Run all major tasks: install, setup, lint, test, format
 all: install setup lint test format
-
-# Docker build and run commands
-docker-build:
-	docker build -t ids706-miniproj6 .
-
-docker-run:
-	docker run -it --rm --network="host" ids706-miniproj6
-
-docker-test:
-	docker run -it --rm --network="host" ids706-miniproj6 pytest tests/
-
-# MySQL inside the running MySQL container
-mysql-cli:
-	docker exec -it mysql-db mysql -u root -p
-
-# Clean up Docker containers and images
-docker-clean:
-	docker system prune -f
-	docker rmi ids706-miniproj6
