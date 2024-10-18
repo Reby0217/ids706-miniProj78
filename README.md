@@ -21,6 +21,18 @@ This script provides the following functionality:
 - **main()**: Entry point of the script that takes a filename as input, counts the words, and stores the result in the database.
 
 
+## Packaging with `setuptools`
+
+We used `setuptools` to package this Python script into a command-line tool. Below is a demonstration that outlines how the project is packaged using a `setup.py` script.
+
+### Key Features of the `setup.py` File:
+- **Name and version**: The name of the package is `word_counter` and its version is dynamically read from a `VERSION` file.
+- **Command-line tool**: The tool is accessible via the terminal with the `word_counter` command.
+- **Dependencies**: All dependencies required to run this tool are specified in `requirements.txt`.
+- **Entry point**: The tool is accessed by running `word_counter` through the command line, which points to the `main()` function in `src/cli.py`.
+
+---
+
 ## Guide of Package Usage
 
 ### Prerequisites
