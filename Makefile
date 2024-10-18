@@ -26,7 +26,7 @@ clean:
 
 # Run the application with messages
 run:
-	. venv/bin/activate && python src/cli.py
+	. venv/bin/activate && python src/cli.py test.txt
 
 # Install the package using setup.py
 install-package:
