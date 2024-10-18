@@ -32,8 +32,8 @@ This script provides the following functionality:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/Reby0217/ids706-miniProj6.git
-   cd ids706-miniProj6
+   git clone https://github.com/Reby0217/ids706-miniProj7.git
+   cd ids706-miniProj7
    ```
 
 2. Install dependencies:
