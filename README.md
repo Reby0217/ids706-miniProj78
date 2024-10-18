@@ -41,6 +41,7 @@ This script provides the following functionality:
    ```bash
    make install
    ```
+
 3. Create and activate a virtual environment:
    ```bash
    make setup
@@ -57,7 +58,6 @@ This script provides the following functionality:
    ```
 
    ![help](screenshots/help.png)
-
 
 ### Usage 
 
