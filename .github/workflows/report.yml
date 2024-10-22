@@ -50,7 +50,7 @@ jobs:
       - name: Generate performance comparison report
         run: |
           . venv/bin/activate
-          python ./src/generate_comparison_report.py  # Ensure the path is correct and file is in the root directory
+          python ./src/generate_comparison_report.py
 
       - name: Display Report
         run: cat performance_report.md
@@ -74,5 +74,7 @@ jobs:
           git commit -m "Update performance report [ci skip]" || echo "No changes to commit"
 
       - name: Push report to main branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.IDS_TOKEN }}
         run: |
-          git push origin HEAD:main
+          git push https://$GITHUB_TOKEN@github.com/Reby0217/ids706-miniProj8.git HEAD:main -o ci.skip
