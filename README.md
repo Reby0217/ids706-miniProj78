@@ -8,12 +8,13 @@
 [![Report](https://github.com/Reby0217/ids706-miniProj8/actions/workflows/report.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj8/actions/workflows/report.yml)
 
 
-This project focuses on packaging a Python script into a command-line tool that counts words in a text file and stores the result in a SQL database. The project includes unit tests, continuous integration with GitHub Actions, and a structured development workflow.
+This project focuses on rewriting a Python script in Rust to create a more efficient command-line tool that counts words in a text file and stores the result in an SQL database. The emphasis is on demonstrating improvements in speed and resource usage through the Rust implementation. 
 
 ---
-## Tool Documentation
 
-### Script: `src/cli.py`
+## Deliverables:
+
+### Python Script: `word_counter_py/cli.py`
 
 This script provides the following functionality:
 
@@ -21,6 +22,20 @@ This script provides the following functionality:
 - **store_word_count(filename, word_count, conn)**: Stores the word count in the SQLite database.
 - **main()**: Entry point of the script that takes a filename as input, counts the words, and stores the result in the database.
 
+### Rust Script: `word_counter_rust/src/main.rs`
+
+The Rust version of the script implements the same functionality as the Python script, aiming for better performance.
+
+---
+
+### Performance Comparison
+
+A performance comparison report is automatically generated using GitHub Actions and saved as `performance_report.md`, which is then pushed to the repository to highlight the performance differences between the two implementations.
+
+  - **Screenshot of performance report**:
+    ![Report](screenshots/report.png)
+
+---
 
 ## Packaging with `setuptools`
 
@@ -30,7 +45,7 @@ We used `setuptools` to package this Python script into a command-line tool. Bel
 - **Name and version**: The name of the package is `word_counter` and its version is dynamically read from a `VERSION` file.
 - **Command-line tool**: The tool is accessible via the terminal with the `word_counter` command.
 - **Dependencies**: All dependencies required to run this tool are specified in `requirements.txt`.
-- **Entry point**: The tool is accessed by running `word_counter` through the command line, which points to the `main()` function in `src/cli.py`.
+- **Entry point**: The tool is accessed by running `word_counter` through the command line, which points to the `main()` function in `word_counter_py/cli.py`.
 
 ---
 
@@ -45,8 +60,8 @@ We used `setuptools` to package this Python script into a command-line tool. Bel
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/Reby0217/ids706-miniProj7.git
-   cd ids706-miniProj7
+   git clone https://github.com/Reby0217/ids706-miniProj8.git
+   cd ids706-miniProj8
    ```
 
 2. Install dependencies:
@@ -65,7 +80,14 @@ We used `setuptools` to package this Python script into a command-line tool. Bel
    make install-package
    ```
 
-5. Verify the package installation and check available options:
+5. Install the Rust-based version:
+   ```bash
+   cd word_counter_rust
+   cargo install --path .
+   cd ..
+   ```
+
+6. Verify the package installation and check available options:
    ```bash
    word_counter --help
    ```
@@ -80,9 +102,15 @@ This tool not only counts the words in a file but also stores the result in an S
    word_counter <path_to_text_file>
    ```
 
+For the Rust-based version:
+
+   ```bash
+   word_counter_rust <path_to_text_file>
+   ```
+
 ### Example
 
-1. For example, to count the words in `test.txt`:
+1. For example, to count the words in `test.txt` using Python:
 
    ```bash
    word_counter test.txt
@@ -92,16 +120,24 @@ This tool not only counts the words in a file but also stores the result in an S
    - Count the words in `test.txt`.
    - Print the word count to the terminal.
    - Store the filename and word count in a local SQLite database (`word_counts.db`).
-   
-   - **Screenshot of word counting in action**:
 
-      ![Test](screenshots/test.png)
+2. To count the words using the Rust-based version:
 
-2. The results are stored in the `word_counts.db` SQLite database in a table called `word_counts`. You can inspect the database to see the stored values.
+   ```bash
+   word_counter_rust test.txt
+   ```
+
+   This command achieves the same results using a more efficient Rust implementation.
+  
+![Test](screenshots/test.png)
+
+
+3. The results are stored in the `word_counts.db` SQLite database in a table called `word_counts`. You can inspect the database to see the stored values.
 
    - **Screenshot of the database table**:
    
       ![DB](screenshots/db.png)
+
 
 ---
 
