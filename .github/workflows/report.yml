@@ -1,4 +1,4 @@
-name: Generate Performance Report
+name: Generate and Deploy Performance Report
 
 on:
   push:
@@ -45,3 +45,16 @@ jobs:
         with:
           name: performance-report
           path: performance_report.md
+
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+
+      - name: Commit and Push Report
+        env:
+          GITHUB_TOKEN: ${{ secrets.IDS_TOKEN }}
+        run: |
+          git add performance_report.md
+          git commit -m "Auto-generate performance report [ci skip]" || echo "No changes to commit"
+          git push origin HEAD:main
