@@ -1,4 +1,4 @@
-name: Generate Performance Report
+name: Generate and Deploy Performance Report
 
 on:
   push:
@@ -46,6 +46,7 @@ jobs:
           cargo build --release
           ./target/release/word_counter_rust ../test.txt > ../rust_results.txt
           cd ..
+  
 
       - name: Generate performance comparison report
         run: |

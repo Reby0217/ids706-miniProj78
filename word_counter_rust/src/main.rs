@@ -4,6 +4,7 @@ use std::fs::File;
 use std::io::{self, Read};
 use std::time::Instant;
 use std::thread::sleep;
+use std::env; // For accessing command-line arguments
 
 // Function to count words in a file
 fn count_words(filename: &str) -> io::Result<usize> {
@@ -30,14 +31,21 @@ fn store_word_count(filename: &str, word_count: usize, conn: &Connection) -> Res
     Ok(())
 }
 
-fn main() -> Result<(), rusqlite::Error> {  
+fn main() -> Result<(), rusqlite::Error> {
+    // Get command-line arguments
+    let args: Vec<String> = env::args().collect();
+    if args.len() < 2 {
+        eprintln!("Usage: {} <filename>", args[0]);
+        std::process::exit(1);
+    }
+    let filename = &args[1];
+
     // Start the system monitoring and time tracking
     let start_time = Instant::now();
     let mut sys = System::new_all();
     
     // Open SQLite connection
-    let conn = Connection::open("word_counts.db")?;  
-    let filename = "test.txt";  // Replace with the actual file name or get input from the user
+    let conn = Connection::open("word_counts.db")?;
 
     // Track the total CPU usage
     let mut total_usage = 0.0;
