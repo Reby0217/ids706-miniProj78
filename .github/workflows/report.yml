@@ -46,12 +46,11 @@ jobs:
           cargo build --release
           ./target/release/word_counter_rust ../test.txt > ../rust_results.txt
           cd ..
-  
 
       - name: Generate performance comparison report
         run: |
           . venv/bin/activate
-          python generate_comparison_report.py
+          python ./generate_comparison_report.py  # Ensure the path is correct and file is in the root directory
 
       - name: Display Report
         run: cat performance_report.md

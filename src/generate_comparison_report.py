@@ -1,5 +1,6 @@
 import re
 
+
 def parse_output(file_path):
     """
     Parses the output file and extracts word count, execution time, CPU usage, and memory used.
@@ -23,6 +24,7 @@ def parse_output(file_path):
         "memory_used": memory_used,
     }
 
+
 def calculate_ratio(python_val, rust_val):
     """
     Calculates the ratio between Python and Rust results.
@@ -31,6 +33,7 @@ def calculate_ratio(python_val, rust_val):
     if python_val == 0:
         return float("inf")  # If the Python value is 0, return an infinite ratio
     return rust_val / python_val
+
 
 def generate_report(python_results, rust_results, report_file="performance_report.md"):
     """
@@ -79,11 +82,13 @@ def generate_report(python_results, rust_results, report_file="performance_repor
 
     print(f"Performance report generated: {report_file}")
 
+
 def main():
     python_results = parse_output("python_results.txt")
     rust_results = parse_output("rust_results.txt")
 
     generate_report(python_results, rust_results)
+
 
 if __name__ == "__main__":
     main()
