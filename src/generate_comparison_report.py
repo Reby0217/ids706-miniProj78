@@ -76,7 +76,7 @@ def generate_report(python_results, rust_results, report_file="performance_repor
         f.write(f"- Python CPU Usage: {python_results['avg_cpu_usage']}%\n")
         f.write(f"- Rust CPU Usage: {rust_results['avg_cpu_usage']}%\n")
         
-        if cpu_usage_ratio == 0:
+        if python_results['avg_cpu_usage'] == 0:
             f.write(f"- **CPU Usage**: Rust used negligible CPU compared to Python\n\n")
         elif cpu_usage_ratio < 1:
             f.write(
@@ -91,7 +91,9 @@ def generate_report(python_results, rust_results, report_file="performance_repor
         f.write(f"- Python Memory Used: {python_results['memory_used']} KB\n")
         f.write(f"- Rust Memory Used: {rust_results['memory_used']} KB\n")
         
-        if memory_usage_ratio < 1:
+        if python_results['memory_used'] == 0:
+            f.write(f"- **Memory Usage**: Rust used significant memory compared to Python\n\n")
+        elif memory_usage_ratio < 1:
             f.write(
                 f"- **Memory Usage**: Rust used {1 / memory_usage_ratio:.2f} times less memory than Python\n\n"
             )
