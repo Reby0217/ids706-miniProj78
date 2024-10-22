@@ -75,6 +75,6 @@ jobs:
 
       - name: Push report to main branch
         env:
-          GITHUB_TOKEN: ${{ secrets.IDS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git push https://$GITHUB_TOKEN@github.com/Reby0217/ids706-miniProj8.git HEAD:main -o ci.skip
