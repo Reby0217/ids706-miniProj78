@@ -1,0 +1,11 @@
+[package]
+name = "word_counter_rust"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+text_io = "0.1"
+rusqlite = "0.26"  # For SQLite database access
+sysinfo = "0.29.10"  # To fetch system info (CPU/memory)

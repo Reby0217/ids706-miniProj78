@@ -15,3 +15,5 @@ numpy==1.25.0
 matplotlib-inline==0.1.6
 seaborn==0.12.2
 mysql-connector-python==8.0.33
+
+psutil==5.9.0

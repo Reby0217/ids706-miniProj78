@@ -26,21 +26,21 @@ def read_requirements(path):
 setup(
     name="word_counter",
     version=read(
-        "src", "VERSION"
-    ),  # Dynamically read the version from a VERSION file in the src folder
+        "word_counter_py", "VERSION"
+    ),  # Dynamically read the version from a VERSION file in the word_counter_py folder
     description="A simple command-line tool to count words in a text file and store the result in a SQLite database.",
     long_description=read("README.md"),  # Read README for long description
     long_description_content_type="text/markdown",
-    url="https://github.com/Reby0217/ids706-miniProj7",
+    url="https://github.com/Reby0217/ids706-miniProj8",
     author="Kejia Liu",
     py_modules=["cli"],  # Instead of find_packages, use py_modules for single module
-    package_dir={"": "src"},
+    package_dir={"": "word_counter_py"},
     install_requires=read_requirements(
         "requirements.txt"
     ),  # Read dependencies from requirements.txt
     entry_points={
         "console_scripts": [
-            "word_counter = cli:main",  # Reference cli directly
+            "word_counter = cli:main",  # Full module path for cli.py
         ],
     },
     extras_require={

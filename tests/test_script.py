@@ -1,7 +1,7 @@
 import os
 import pytest
 import sqlite3
-from src.cli import count_words, store_word_count
+from word_counter_py.cli import count_words, store_word_count
 
 
 @pytest.fixture(scope="session")

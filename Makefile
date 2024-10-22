@@ -14,7 +14,7 @@ test:
 
 # Lint the source code and tests
 lint:
-	. venv/bin/activate && ruff check src tests
+	. venv/bin/activate && ruff check word_counter_py tests
 
 # Format all Python files
 format:
@@ -26,7 +26,7 @@ clean:
 
 # Run the application with messages
 run:
-	. venv/bin/activate && python src/cli.py test.txt
+	. venv/bin/activate && python word_counter_py/cli.py test.txt
 
 # Install the package using setup.py
 install-package:

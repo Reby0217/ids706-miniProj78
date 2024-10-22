@@ -8,3 +8,4 @@ htmlcov/
 venv/
 *.egg-info/
 build
+word_counter_rust/target
