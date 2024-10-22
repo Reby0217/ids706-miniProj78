@@ -1,10 +1,11 @@
 # IDS706 Package a Python Script into a Command-Line Tool (or Rust)
 
 ## Continuous Integration with GitHub Actions
-[![Install](https://github.com/Reby0217/ids706-miniProj7/actions/workflows/install.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj7/actions/workflows/install.yml)
-[![Lint](https://github.com/Reby0217/ids706-miniProj7/actions/workflows/lint.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj7/actions/workflows/lint.yml)
-[![Format](https://github.com/Reby0217/ids706-miniProj7/actions/workflows/format.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj7/actions/workflows/format.yml)
-[![Tests](https://github.com/Reby0217/ids706-miniProj7/actions/workflows/test.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj7/actions/workflows/test.yml)
+[![Install](https://github.com/Reby0217/ids706-miniProj8/actions/workflows/install.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj8/actions/workflows/install.yml)
+[![Lint](https://github.com/Reby0217/ids706-miniProj8/actions/workflows/lint.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj8/actions/workflows/lint.yml)
+[![Format](https://github.com/Reby0217/ids706-miniProj8/actions/workflows/format.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj8/actions/workflows/format.yml)
+[![Tests](https://github.com/Reby0217/ids706-miniProj8/actions/workflows/test.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj8/actions/workflows/test.yml)
+[![Report](https://github.com/Reby0217/ids706-miniProj8/actions/workflows/report.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj8/actions/workflows/report.yml)
 
 
 This project focuses on packaging a Python script into a command-line tool that counts words in a text file and stores the result in a SQL database. The project includes unit tests, continuous integration with GitHub Actions, and a structured development workflow.
