@@ -1,4 +1,4 @@
-# IDS706 Package a Python Script into a Command-Line Tool (or Rust)
+# IDS706 Rewrite a Python Script in Rust
 
 ## Continuous Integration with GitHub Actions
 [![Install](https://github.com/Reby0217/ids706-miniProj8/actions/workflows/install.yml/badge.svg)](https://github.com/Reby0217/ids706-miniProj8/actions/workflows/install.yml)

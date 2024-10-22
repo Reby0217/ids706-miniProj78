@@ -62,23 +62,43 @@ def generate_report(python_results, rust_results, report_file="performance_repor
             f"- Python Execution Time: {python_results['execution_time']} seconds\n"
         )
         f.write(f"- Rust Execution Time: {rust_results['execution_time']} seconds\n")
-        f.write(
-            f"- **Execution Time**: Rust took {execution_time_ratio:.2f} times {'less' if execution_time_ratio < 1 else 'more'} time than Python\n\n"
-        )
+        
+        if execution_time_ratio < 1:
+            f.write(
+                f"- **Execution Time**: Rust took {1 / execution_time_ratio:.2f} times less time than Python\n\n"
+            )
+        else:
+            f.write(
+                f"- **Execution Time**: Rust took {execution_time_ratio:.2f} times more time than Python\n\n"
+            )
 
         f.write("## Average CPU Core Usage Comparison\n\n")
         f.write(f"- Python CPU Usage: {python_results['avg_cpu_usage']}%\n")
         f.write(f"- Rust CPU Usage: {rust_results['avg_cpu_usage']}%\n")
-        f.write(
-            f"- **CPU Usage**: Rust used {cpu_usage_ratio:.2f} times {'less' if cpu_usage_ratio < 1 else 'more'} CPU than Python\n\n"
-        )
+        
+        if cpu_usage_ratio == 0:
+            f.write(f"- **CPU Usage**: Rust used negligible CPU compared to Python\n\n")
+        elif cpu_usage_ratio < 1:
+            f.write(
+                f"- **CPU Usage**: Rust used {1 / cpu_usage_ratio:.2f} times less CPU than Python\n\n"
+            )
+        else:
+            f.write(
+                f"- **CPU Usage**: Rust used {cpu_usage_ratio:.2f} times more CPU than Python\n\n"
+            )
 
         f.write("## Memory Usage Comparison\n\n")
         f.write(f"- Python Memory Used: {python_results['memory_used']} KB\n")
         f.write(f"- Rust Memory Used: {rust_results['memory_used']} KB\n")
-        f.write(
-            f"- **Memory Usage**: Rust used {memory_usage_ratio:.2f} times {'less' if memory_usage_ratio < 1 else 'more'} memory than Python\n\n"
-        )
+        
+        if memory_usage_ratio < 1:
+            f.write(
+                f"- **Memory Usage**: Rust used {1 / memory_usage_ratio:.2f} times less memory than Python\n\n"
+            )
+        else:
+            f.write(
+                f"- **Memory Usage**: Rust used {memory_usage_ratio:.2f} times more memory than Python\n\n"
+            )
 
     print(f"Performance report generated: {report_file}")
 
