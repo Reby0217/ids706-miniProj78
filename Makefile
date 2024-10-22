@@ -36,5 +36,12 @@ install-package:
 clean-package:
 	. venv/bin/activate && python setup.py clean --all
 
+
+# Generate performance comparison report
+report:
+	. venv/bin/activate && python word_counter_py/cli.py test.txt > python_results.txt
+	word_counter_rust test.txt > rust_results.txt
+	. venv/bin/activate && python src/generate_comparison_report.py
+
 # Run all major tasks: install, setup, lint, test, format
 all: install setup lint test format

@@ -37,7 +37,7 @@ fn main() -> Result<(), rusqlite::Error> {
     
     // Open SQLite connection
     let conn = Connection::open("word_counts.db")?;  
-    let filename = "../test.txt";  // Replace with the actual file name or get input from the user
+    let filename = "test.txt";  // Replace with the actual file name or get input from the user
 
     // Track the total CPU usage
     let mut total_usage = 0.0;
