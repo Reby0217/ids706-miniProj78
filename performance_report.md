@@ -7,19 +7,19 @@
 
 ## Execution Time Comparison
 
-- Python Execution Time: 1.006897 seconds
-- Rust Execution Time: 0.41 seconds
-- **Execution Time**: Rust took 2.46 times less time than Python
+- Python Execution Time: 1.00291 seconds
+- Rust Execution Time: 0.33 seconds
+- **Execution Time**: Rust took 3.04 times less time than Python
 
 ## Average CPU Core Usage Comparison
 
-- Python CPU Usage: 10.51%
-- Rust CPU Usage: 11.25%
-- **CPU Usage**: Rust used 1.07 times more CPU than Python
+- Python CPU Usage: 2.7%
+- Rust CPU Usage: 0.0%
+- **CPU Usage**: Rust used significantly less CPU compared to Python
 
 ## Memory Usage Comparison
 
-- Python Memory Used: 384.0 KB
-- Rust Memory Used: 81920.0 KB
-- **Memory Usage**: Rust used 213.33 times more memory than Python
+- Python Memory Used: 0.25 KB
+- Rust Memory Used: 0.0 KB
+- **Memory Usage**: Rust used significantly less memory compared to Python
 
