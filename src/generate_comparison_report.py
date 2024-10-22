@@ -1,6 +1,5 @@
 import re
 
-
 def parse_output(file_path):
     """
     Parses the output file and extracts word count, execution time, CPU usage, and memory used.
@@ -24,7 +23,6 @@ def parse_output(file_path):
         "memory_used": memory_used,
     }
 
-
 def calculate_ratio(python_val, rust_val):
     """
     Calculates the ratio between Python and Rust results.
@@ -33,7 +31,6 @@ def calculate_ratio(python_val, rust_val):
     if python_val == 0:
         return float("inf")  # If the Python value is 0, return an infinite ratio
     return rust_val / python_val
-
 
 def generate_report(python_results, rust_results, report_file="performance_report.md"):
     """
@@ -76,7 +73,7 @@ def generate_report(python_results, rust_results, report_file="performance_repor
         f.write(f"- Python CPU Usage: {python_results['avg_cpu_usage']}%\n")
         f.write(f"- Rust CPU Usage: {rust_results['avg_cpu_usage']}%\n")
         
-        if python_results['avg_cpu_usage'] == 0:
+        if python_results['avg_cpu_usage'] == 0 or cpu_usage_ratio == float("inf"):
             f.write(f"- **CPU Usage**: Rust used negligible CPU compared to Python\n\n")
         elif cpu_usage_ratio < 1:
             f.write(
@@ -91,7 +88,7 @@ def generate_report(python_results, rust_results, report_file="performance_repor
         f.write(f"- Python Memory Used: {python_results['memory_used']} KB\n")
         f.write(f"- Rust Memory Used: {rust_results['memory_used']} KB\n")
         
-        if python_results['memory_used'] == 0:
+        if python_results['memory_used'] == 0 or memory_usage_ratio == float("inf"):
             f.write(f"- **Memory Usage**: Rust used significant memory compared to Python\n\n")
         elif memory_usage_ratio < 1:
             f.write(
@@ -104,13 +101,11 @@ def generate_report(python_results, rust_results, report_file="performance_repor
 
     print(f"Performance report generated: {report_file}")
 
-
 def main():
     python_results = parse_output("python_results.txt")
     rust_results = parse_output("rust_results.txt")
 
     generate_report(python_results, rust_results)
-
 
 if __name__ == "__main__":
     main()
