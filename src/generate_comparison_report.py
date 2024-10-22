@@ -73,8 +73,10 @@ def generate_report(python_results, rust_results, report_file="performance_repor
         f.write(f"- Python CPU Usage: {python_results['avg_cpu_usage']}%\n")
         f.write(f"- Rust CPU Usage: {rust_results['avg_cpu_usage']}%\n")
         
-        if python_results['avg_cpu_usage'] == 0 or cpu_usage_ratio == float("inf"):
-            f.write(f"- **CPU Usage**: Rust used negligible CPU compared to Python\n\n")
+        if python_results['avg_cpu_usage'] == 0:
+            f.write(f"- **CPU Usage**: Python reported negligible CPU usage\n\n")
+        elif cpu_usage_ratio == float("inf"):
+            f.write(f"- **CPU Usage**: Rust used significantly higher CPU compared to Python\n\n")
         elif cpu_usage_ratio < 1:
             f.write(
                 f"- **CPU Usage**: Rust used {1 / cpu_usage_ratio:.2f} times less CPU than Python\n\n"
@@ -88,8 +90,10 @@ def generate_report(python_results, rust_results, report_file="performance_repor
         f.write(f"- Python Memory Used: {python_results['memory_used']} KB\n")
         f.write(f"- Rust Memory Used: {rust_results['memory_used']} KB\n")
         
-        if python_results['memory_used'] == 0 or memory_usage_ratio == float("inf"):
-            f.write(f"- **Memory Usage**: Rust used significant memory compared to Python\n\n")
+        if python_results['memory_used'] == 0:
+            f.write(f"- **Memory Usage**: Python reported negligible memory usage\n\n")
+        elif memory_usage_ratio == float("inf"):
+            f.write(f"- **Memory Usage**: Rust used significantly higher memory compared to Python\n\n")
         elif memory_usage_ratio < 1:
             f.write(
                 f"- **Memory Usage**: Rust used {1 / memory_usage_ratio:.2f} times less memory than Python\n\n"
@@ -100,6 +104,7 @@ def generate_report(python_results, rust_results, report_file="performance_repor
             )
 
     print(f"Performance report generated: {report_file}")
+
 
 def main():
     python_results = parse_output("python_results.txt")
