@@ -1,37 +1,3 @@
-import re
-
-def parse_output(file_path):
-    """
-    Parses the output file and extracts word count, execution time, CPU usage, and memory used.
-    """
-    with open(file_path, "r") as f:
-        content = f.read()
-
-    word_count = int(re.search(r"Word count: (\d+)", content).group(1))
-    execution_time = float(
-        re.search(r"Execution time: ([\d\.]+) seconds", content).group(1)
-    )
-    avg_cpu_usage = float(
-        re.search(r"Average CPU core usage: ([\d\.]+)%", content).group(1)
-    )
-    memory_used = float(re.search(r"Memory used: ([\d\.]+) KB", content).group(1))
-
-    return {
-        "word_count": word_count,
-        "execution_time": execution_time,
-        "avg_cpu_usage": avg_cpu_usage,
-        "memory_used": memory_used,
-    }
-
-def calculate_ratio(python_val, rust_val):
-    """
-    Calculates the ratio between Python and Rust results.
-    A ratio > 1 means Rust is higher; < 1 means Rust is lower.
-    """
-    if python_val == 0:
-        return float("inf")  # If the Python value is 0, return an infinite ratio
-    return rust_val / python_val
-
 def generate_report(python_results, rust_results, report_file="performance_report.md"):
     """
     Generates a performance comparison report in markdown format, including
@@ -60,7 +26,11 @@ def generate_report(python_results, rust_results, report_file="performance_repor
         )
         f.write(f"- Rust Execution Time: {rust_results['execution_time']} seconds\n")
         
-        if execution_time_ratio < 1:
+        if execution_time_ratio == float("inf"):
+            f.write(
+                f"- **Execution Time**: Rust execution time was significantly higher than Python\n\n"
+            )
+        elif execution_time_ratio < 1:
             f.write(
                 f"- **Execution Time**: Rust took {1 / execution_time_ratio:.2f} times less time than Python\n\n"
             )
@@ -76,7 +46,7 @@ def generate_report(python_results, rust_results, report_file="performance_repor
         if python_results['avg_cpu_usage'] == 0:
             f.write(f"- **CPU Usage**: Python reported negligible CPU usage\n\n")
         elif cpu_usage_ratio == float("inf"):
-            f.write(f"- **CPU Usage**: Rust used significantly higher CPU compared to Python\n\n")
+            f.write(f"- **CPU Usage**: Rust used significantly more CPU than Python\n\n")
         elif cpu_usage_ratio < 1:
             f.write(
                 f"- **CPU Usage**: Rust used {1 / cpu_usage_ratio:.2f} times less CPU than Python\n\n"
@@ -93,7 +63,7 @@ def generate_report(python_results, rust_results, report_file="performance_repor
         if python_results['memory_used'] == 0:
             f.write(f"- **Memory Usage**: Python reported negligible memory usage\n\n")
         elif memory_usage_ratio == float("inf"):
-            f.write(f"- **Memory Usage**: Rust used significantly higher memory compared to Python\n\n")
+            f.write(f"- **Memory Usage**: Rust used significantly more memory than Python\n\n")
         elif memory_usage_ratio < 1:
             f.write(
                 f"- **Memory Usage**: Rust used {1 / memory_usage_ratio:.2f} times less memory than Python\n\n"
@@ -104,13 +74,3 @@ def generate_report(python_results, rust_results, report_file="performance_repor
             )
 
     print(f"Performance report generated: {report_file}")
-
-
-def main():
-    python_results = parse_output("python_results.txt")
-    rust_results = parse_output("rust_results.txt")
-
-    generate_report(python_results, rust_results)
-
-if __name__ == "__main__":
-    main()
