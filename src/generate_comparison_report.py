@@ -64,6 +64,10 @@ def generate_report(python_results, rust_results, report_file="performance_repor
             f.write(
                 f"- **Execution Time**: Rust execution time was significantly higher than Python\n\n"
             )
+        elif execution_time_ratio == 0:
+            f.write(
+                f"- **Execution Time**: Rust took significantly less time than Python\n\n"
+            )
         elif execution_time_ratio < 1:
             f.write(
                 f"- **Execution Time**: Rust took {1 / execution_time_ratio:.2f} times less time than Python\n\n"
@@ -80,7 +84,9 @@ def generate_report(python_results, rust_results, report_file="performance_repor
         if python_results['avg_cpu_usage'] == 0:
             f.write(f"- **CPU Usage**: Python reported negligible CPU usage\n\n")
         elif cpu_usage_ratio == float("inf"):
-            f.write(f"- **CPU Usage**: Rust used significantly more CPU than Python\n\n")
+            f.write(f"- **CPU Usage**: Rust used significantly higher CPU compared to Python\n\n")
+        elif cpu_usage_ratio == 0:
+            f.write(f"- **CPU Usage**: Rust used significantly less CPU compared to Python\n\n")
         elif cpu_usage_ratio < 1:
             f.write(
                 f"- **CPU Usage**: Rust used {1 / cpu_usage_ratio:.2f} times less CPU than Python\n\n"
@@ -97,7 +103,9 @@ def generate_report(python_results, rust_results, report_file="performance_repor
         if python_results['memory_used'] == 0:
             f.write(f"- **Memory Usage**: Python reported negligible memory usage\n\n")
         elif memory_usage_ratio == float("inf"):
-            f.write(f"- **Memory Usage**: Rust used significantly more memory than Python\n\n")
+            f.write(f"- **Memory Usage**: Rust used significantly higher memory compared to Python\n\n")
+        elif memory_usage_ratio == 0:
+            f.write(f"- **Memory Usage**: Rust used significantly less memory compared to Python\n\n")
         elif memory_usage_ratio < 1:
             f.write(
                 f"- **Memory Usage**: Rust used {1 / memory_usage_ratio:.2f} times less memory than Python\n\n"
