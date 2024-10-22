@@ -39,9 +39,13 @@ clean-package:
 
 # Generate performance comparison report
 report:
-	. venv/bin/activate && python word_counter_py/cli.py test.txt > python_results.txt
-	word_counter_rust test.txt > rust_results.txt
-	. venv/bin/activate && python src/generate_comparison_report.py
+	. venv/bin/activate && \
+	python word_counter_py/cli.py test.txt > python_results.txt && \
+	cd word_counter_rust && \
+	cargo build --release && \
+	./target/release/word_counter_rust ../test.txt > ../rust_results.txt && \
+	cd .. && \
+	python ./src/generate_comparison_report.py
 
 # Run all major tasks: install, setup, lint, test, format
 all: install setup lint test format

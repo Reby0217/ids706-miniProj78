@@ -1,4 +1,0 @@
-Word count: 60
-Execution time: 1.006144 seconds
-Average CPU core usage: 11.19%
-Memory used: 384.00 KB
